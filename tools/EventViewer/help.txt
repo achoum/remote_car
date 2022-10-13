@@ -1,0 +1,52 @@
+Event Viewer v2.0.7
+
+By Mathieu Guillame-Bert
+mathieug@andrew.cmu.edu
+
+
+1. PRESENTATION
+		
+	Event viewer is a small software that allow you to visualize easily time series and time sequences.
+	You can either directly import and visualize your data (e.g. csv files), or you can define a "view". A view is a powerful way to define what and how the data should be displayed. Data from different files can be combined. Since Event viewer is especially designed for time series and time sequences, it can print very large datasets.
+	
+	A video tutorial is available at http://framework.mathieu.guillame-bert.com/.
+	
+2. FEATURES
+
+	[+] Display symbolic and scalar time series and time sequences.
+	[+] Fast moving and zooming on plot.
+	[+] Allow several plotting styles (e.g. curves, stairs, market , bars, crosses, dashed, etc.)
+	[+] Customizable organization of the plots
+	[+] Display huge datasets
+	[+] Possibility to add annotations
+	[+] Support csv, evt and bin files
+	[+] Load "directories" i.e. loading all the files in a directory and organizing them.
+	[+] Directly import files (csv, evt, bin, directory).
+	[+] Plot histogram of values
+	[+] Plot cross plot of values
+
+3. MOUSE AND KEYBOARD
+
+	By default, the mouse uses the three buttons and the wheel of the mouse.
+	Left click (drag and release) : Move the cursor and show value of signals
+	Right click (drag and release) : Translate the view
+	Middle click (drag and release) : Zoom in.
+	
+	You can change the behavior of the mouse by pressing on the four buttons on the top left (A, arrow, magnifier and side arrows).
+
+5. DATA FILE FORMAT
+	
+	Supported input files are: CSV, EVT, BIN, and directory.
+	
+	For CSV files, the first column should be the time expressed as a numerical value. Other collumns should also be numerical. To display other types of CSV files, you should import them with Honey before.
+	
+	A .evt file is a text file where each line has the form "[time] [symbol] [value] [source]". "Value" and "source" are optional.
+	Examples:
+		10.5 A
+		20 B 1
+		15 A 2 8
+		
+	When loading a directory, Event viewer look for all files with the .csv or .evt extension, and load them.
+	The prefix is automatically defined to be the name of each file.
+	
+

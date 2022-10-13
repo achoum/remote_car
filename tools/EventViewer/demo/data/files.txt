@@ -1,0 +1,2 @@
+REG name:s$1 dir:data/ file:d([0-9]+).evt
+FILE name:global path:data/global.evt

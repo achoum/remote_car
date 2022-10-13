@@ -1,0 +1,37 @@
+
+# Propagation
+PROP	Nei	[DE]
+
+# Definition with regular expression
+REG	Target(s[0-9]+)
+
+# Raw definition
+Nei(s0,s1)
+
+Nei(s1,s0)
+Nei(s1,s2)
+
+Nei(s2,s1)
+Nei(s2,s3)
+
+Nei(s3,s2)
+Nei(s3,s4)
+
+Nei(s4,s3)
+Nei(s4,s5)
+
+Nei(s5,s4)
+Nei(s5,s6)
+
+Nei(s6,s5)
+Nei(s6,s7)
+
+Nei(s7,s6)
+Nei(s7,s8)
+
+Nei(s8,s7)
+Nei(s8,s9)
+
+Nei(s9,s8)
+
+Global(global)
