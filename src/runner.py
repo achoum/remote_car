@@ -35,24 +35,24 @@ class Controller:
         self.output_speed_ = 0
         self.output_direction_ = 0
 
-        self.output_debug_stream_ = True
+        self.output_debug_stream_ = False
         self.refresh_interval_ = 0.02
-        self.connect_to_gpio_ = False
+        self.connect_to_gpio_ = True
 
         self.power_engine_ = 1
         self.power_brake_ = 4
         self.mass_ = 10
 
         # Minimum and maximum value sent to the server when turning wheels.
-        self.calibration_direction = (-0.4, 0.4)
+        self.calibration_direction = (-0.8, 0.8)
 
         self.direction_mode = DIRECTION_MODE_DIRECT
-        self.speed_mode = SPEED_MODE_SLOW_1
+        self.speed_mode = SPEED_MODE_DIRECT
 
         if self.connect_to_gpio_:
             Device.pin_factory = PiGPIOFactory()
-            self.servo_forward_ = Motor(forward=13, backward=6, enable=5)
-            self.servo_direction_ = Servo(19)
+            self.servo_forward_ = Motor(forward=6, backward=5, enable=11)
+            self.servo_direction_ = Servo(13)
         else:
             self.servo_forward_ = None
             self.servo_direction_ = None
@@ -97,8 +97,11 @@ class Controller:
 
     def set_gpio(self):
         self.servo_direction_.value = self.unit_direction_to_servo_direction(
-            self.output_direction_)
-        self.servo_forward_.forward(self.output_speed_)
+            -self.output_direction_)
+        if self.output_speed_>= 0:
+            self.servo_forward_.forward(self.output_speed_)
+        else:
+            self.servo_forward_.backward(-self.output_speed_)
 
     def run(self):
         while True:
@@ -168,7 +171,8 @@ def main():
         conroller.run()
     except Exception as e:
         errprint("Interrupted:", e)
-        conroller.reset()
+        if conroller is not None:
+            conroller.reset()
         raise e
 
     errprint("Reset")

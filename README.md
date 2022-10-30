@@ -1,5 +1,12 @@
 # Remove Car
 
+## Requirements
+
+```shell
+sudo apt-get install vlc
+```
+
+
 ## Run all locally
 
 

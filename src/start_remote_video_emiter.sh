@@ -13,9 +13,9 @@
 
 # vcodec=mp2v
 
-cvlc v4l2:///dev/video0 \
-    :chroma=MJPG :v4l2-caching=0 :v4l2-width=320 :v4l2-height=240 :live-caching=0 :v4l2-fps=25 :v4l2-audio-mute \
-    --sout 'standard{access=http,mux=ts,mime=video/ts,dst=:8099}'
+#cvlc v4l2:///dev/video0 \
+#    :chroma=MJPG :v4l2-caching=0 :v4l2-width=320 :v4l2-height=240 :live-caching=0 :v4l2-fps=25 :v4l2-audio-mute \
+#    --sout 'standard{access=http,mux=ts,mime=video/ts,dst=:8099}'
     
     # #transcode{vcodec=mpgv,vb=128,acodec=none}:
     #--sout '#transcode{vcodec=mpgv,vb=800,acodec=none}:rtp{sdp=rtsp://:8554/}'
@@ -24,3 +24,10 @@ cvlc v4l2:///dev/video0 \
 #    :v4l2-width=320 :v4l2-height=200 :live-caching=0 :v4l2-fps=25 :v4l2-audio-mute \
 #    --live-caching=10 \
 #    --sout '#transcode{vcodec=mp2v,vb=256,acodec=ne}:std{access=udp{caching=10},mux=ts,#dst=localhost:1234}'
+
+set -vex
+source config.sh
+
+CMD="raspivid -b 200000 -vf -t 0 -fps 30 -w 800 -h 600 --flush -o - | gst-launch-1.0 fdsrc ! h264parse ! rtph264pay config-interval=1 pt=96 ! gdppay ! tcpserversink host=192.168.0.234 port=2032"
+
+${REMOTE_EXEC} "${CMD}"
