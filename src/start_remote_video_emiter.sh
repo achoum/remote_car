@@ -28,6 +28,6 @@
 set -vex
 source config.sh
 
-CMD="raspivid -b 200000 -vf -t 0 -fps 30 -w 800 -h 600 --flush -o - | gst-launch-1.0 fdsrc ! h264parse ! rtph264pay config-interval=1 pt=96 ! gdppay ! tcpserversink host=192.168.0.234 port=2032"
+CMD="raspivid -b 200000 -vf -hf -t 0 -fps 30 -w 800 -h 600 --flush -o - | gst-launch-1.0 fdsrc ! h264parse ! rtph264pay config-interval=1 pt=96 ! gdppay ! tcpserversink host=192.168.0.234 port=2032"
 
 ${REMOTE_EXEC} "${CMD}"

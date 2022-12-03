@@ -45,11 +45,13 @@ class Controller:
 
             cur_time = time.time() - self.begin_time_
 
-            self.sync(cur_time,  "accelerator",
+            self.sync(cur_time, "accelerator",
                       self.joy_.RightTrigger - self.joy_.LeftTrigger)
 
-            self.sync(cur_time,  "direction",
+            self.sync(cur_time, "direction",
                       self.joy_.LeftJoystickX)
+
+            self.sync(cur_time, "light",                      self.joy_.A)
 
             self.end_frame()
             time.sleep(MIN_UPDATE_INTERVAL)

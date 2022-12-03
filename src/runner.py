@@ -7,10 +7,9 @@ import math
 import threading
 import sys
 
-from gpiozero import Device, LED, Motor, Servo
+from gpiozero import Device, LED, Motor, Servo, DigitalOutputDevice
 import time
-from gpiozero.pins.pigpio import PiGPIOPin
-from gpiozero.pins.pigpio import PiGPIOFactory
+from gpiozero.pins.pigpio import PiGPIOFactory, PiGPIOPin
 
 
 DIRECTION_MODE_DIRECT = 0
@@ -31,9 +30,12 @@ class Controller:
     def __init__(self):
         self.input_accelerator_ = 0
         self.input_direction_ = 0
+        self.input_light = False
+        self.last_input_light = False
 
         self.output_speed_ = 0
         self.output_direction_ = 0
+        self.output_light = False
 
         self.output_debug_stream_ = False
         self.refresh_interval_ = 0.02
@@ -53,9 +55,13 @@ class Controller:
             Device.pin_factory = PiGPIOFactory()
             self.servo_forward_ = Motor(forward=6, backward=5, enable=11)
             self.servo_direction_ = Servo(13)
+            self.light_ = DigitalOutputDevice(9)
+            self.enable_light_ = DigitalOutputDevice(10)
         else:
             self.servo_forward_ = None
             self.servo_direction_ = None
+            self.light_ = None
+            self.enable_light_ = None
 
         self.thread_ = threading.Thread(
             target=self.thread_collect, daemon=True)
@@ -77,10 +83,13 @@ class Controller:
                     self.input_accelerator_ = evt_value
                 elif evt_key == "direction":
                     self.input_direction_ = evt_value
+                elif evt_key == "light":
+                    self.input_light = evt_value >= 0.5
                 else:
                     print(f"Unknown event type {evt_key}", flush=True)
             except Exception as e:
-                print(f"Cannot parse line {e}", flush=True)
+                print(
+                    f"Cannot parse line \"{l}\".\nException: {e}", flush=True)
 
     def output_evt(self, ttime):
         evt(ttime, "input_accelerator", self.input_accelerator_)
@@ -98,7 +107,7 @@ class Controller:
     def set_gpio(self):
         self.servo_direction_.value = self.unit_direction_to_servo_direction(
             -self.output_direction_)
-        if self.output_speed_>= 0:
+        if self.output_speed_ >= 0:
             self.servo_forward_.forward(self.output_speed_)
         else:
             self.servo_forward_.backward(-self.output_speed_)
@@ -106,6 +115,15 @@ class Controller:
     def run(self):
         while True:
             ttime = time.time()
+
+            if self.input_light != self.last_input_light:
+                self.last_input_light = self.input_light
+
+                if self.input_light:
+                    # Switch light
+                    self.output_light = not self.output_light
+                    self.light_.value = self.output_light
+                    self.enable_light_.value = self.output_light
 
             if self.direction_mode == DIRECTION_MODE_DIRECT:
                 self.output_direction_ = self.input_direction_
