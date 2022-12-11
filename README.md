@@ -4,7 +4,7 @@ I made a small (13x8cm) wood remote car with a real-time camera. The car is cont
 
 ![Remove wood car](media/car.jpg)
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Unp960vsMwE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![](media/youtube.jpg)](https://youtu.be/Unp960vsMwE)
 
 [More pictures](https://photos.app.goo.gl/YScf1Ado4gzN9pAS6)
 
