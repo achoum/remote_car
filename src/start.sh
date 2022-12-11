@@ -13,29 +13,42 @@ killall() {
     echo DONE
 }
 
+PYTHON_LOCAL=python3
+
+# ===============
+#  Remote runner
+# ===============
+
 # Copy runner source code on pi
 time rsync -r ../../remote_car/src "${RASPBERRY_USER}@${RASPBERRY_IP}:${REMOTE_LOCATION}/remote_car"
 
 # Start video emiter
 # -b 200000 => poor quality, good refresh
-CMD="raspivid -b 200000 -vf -hf -t 0 -fps 30 -w 1024 -h 768 --flush -o - | gst-launch-1.0 fdsrc ! h264parse ! rtph264pay config-interval=1 pt=96 ! gdppay ! tcpserversink host=192.168.0.234 port=2032"
+CMD="raspivid -b 500000 -vf -hf -t 0 -fps 30 -w 1024 -h 768 --flush -o - | gst-launch-1.0 fdsrc ! h264parse ! rtph264pay config-interval=1 pt=96 ! gdppay ! tcpserversink host=192.168.0.234 port=2032"
 ${REMOTE_EXEC} "${CMD}" &
 
 # Run runner remotely
 CMD=". ~/.bashrc && cd ${REMOTE_LOCATION}/remote_car/src && nc -lkuv 2020 | ${PYTHON} runner.py"
 ${REMOTE_EXEC} "${CMD}" &
 
-# Wait for the runner & video emiter to start
-sleep 10
+# ==================
+#  Local controller
+# ==================
 
-# Start controler
-python3 controller.py | nc -vu ${RASPBERRY_IP} 2020 &
+# Comment the "local controller" block if controlling the car with another source.
+# For example, if controlling the car with "start_local_controller.bat" on a different computer.
 
-# Start video receiver
-gst-launch-1.0 -v tcpclientsrc host=${RASPBERRY_IP} port=2032 ! gdpdepay ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false &
+# # Wait for the runner & video emiter to start
+# sleep 10
 
-# Wait for the controller to start
-sleep 2
+# # Start controler
+# ${PYTHON_LOCAL} controller.py | nc -vu ${RASPBERRY_IP} 2020 &
+
+# # Start video receiver
+# gst-launch-1.0 -v tcpclientsrc host=${RASPBERRY_IP} port=2032 ! gdpdepay ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false &
+
+# # Wait for the controller to start
+# sleep 2
 
 echo "========================"
 echo "You can control the car!"

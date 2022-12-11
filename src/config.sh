@@ -1,8 +1,7 @@
 set -vex
 set -o pipefail
 
-# Configuration
-
+# Configuration for the raspberry ip
 RASPBERRY_IP="192.168.0.234"
 REMOTE_LOCATION="~"
 RASPBERRY_USER="pi"

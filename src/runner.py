@@ -9,7 +9,7 @@ import sys
 
 from gpiozero import Device, LED, Motor, Servo, DigitalOutputDevice
 import time
-from gpiozero.pins.pigpio import PiGPIOFactory, PiGPIOPin
+from gpiozero.pins.pigpio import PiGPIOFactory
 
 
 DIRECTION_MODE_DIRECT = 0
